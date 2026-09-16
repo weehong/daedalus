@@ -33,7 +33,9 @@ export const UnitTypesTable = ({
 							</th>
 						))}
 						{renderActions && (
-							<th scope="col">{t("projects.detail.actions")}</th>
+							<th className="border-b border-rule p-3" scope="col">
+								{t("projects.detail.actions")}
+							</th>
 						)}
 					</tr>
 				</thead>

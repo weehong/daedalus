@@ -115,7 +115,7 @@ export const UnitTypeForm = ({
 					{...register("description")}
 				/>
 			</Field>
-			<div className="flex flex-wrap items-center gap-2">
+			<div className="flex flex-wrap items-center gap-2 self-end">
 				<Button pending={busy} type="submit">
 					{t(
 						busy
