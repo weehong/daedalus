@@ -8,7 +8,7 @@ export const Input = forwardRef<
 	<input
 		ref={ref}
 		{...props}
-		className={`min-h-9 w-full border border-rule bg-surface px-2.5 py-1.5 text-sm text-ink caret-accent placeholder:text-ink/40 hover:border-ink/45 focus-visible:border-accent focus-visible:outline-offset-0 aria-invalid:border-accent-700 ${className}`}
+		className={`min-h-9 w-full border border-rule bg-surface px-2.5 py-1.5 text-sm text-ink caret-accent placeholder:text-ink/40 hover:border-ink/45 focus-visible:border-accent focus-visible:outline-offset-0 aria-invalid:border-danger ${className}`}
 	/>
 ));
 Input.displayName = "Input";

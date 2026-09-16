@@ -9,7 +9,7 @@ export const Alert = ({
 }): React.ReactElement => (
 	<BlueprintFrame
 		aria-live="assertive"
-		className="border-accent-700 p-2.5 text-[13px] text-accent-800"
+		className="border-danger p-2.5 text-[13px] text-danger"
 		role="alert"
 	>
 		{children}

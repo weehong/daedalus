@@ -23,10 +23,9 @@ implementation. At most five subagents ran concurrently.
 | T4b | T4 integrated; regression discovered during T5 | Preserve the Session on provider revocation failure; public SDK cleanup and invalid-Session handling; seven provider-edge regression cases | Reviewed, integrated and verified |
 | T5 | T1–T4 and T4b integrated | Provider-intercepted Playwright coverage of navigation, guards, persistence, mobile menu, sign-out, copy and example; all configured browsers | 45 browser cases passed |
 | T6 | T1–T4 integrated | Root/frontend README corrections, spec progress and acceptance evidence | Reviewed and integrated |
-| Skills verification | None | Confirm seven skills in both Codex and Claude Code through actual runtime metadata | Passed |
 | Final review | T5 and T6 | Independent standards and spec reviews, resulting fixes and relevant combined checks | Zero findings in each review; all 41 user stories covered |
 
-T1–T4 and skills verification were eligible to run concurrently. T5 and T6
+T1–T4 were eligible to run concurrently. T5 and T6
 started only after T1–T4 were integrated. T5 exposed a provider failure regression
 and its final acceptance waited for T4b to be reviewed and integrated. Existing deleted frontend identity
 files remain deleted; the backend `/me` route and its tests remain intact.
@@ -100,23 +99,3 @@ original environment/dependency paths were preserved.
   `storybook-static/`.
 - Screenshots: `console-desktop.png`, `console-mobile-closed.png` and
   `console-mobile-open.png`.
-
-## Skills available in both runtimes
-
-Verified skills: `handoff`, `implement-spec`, `implement`, `tdd`, `code-review`,
-`to-spec` and `to-tickets`.
-
-- Codex CLI **0.153.4**: the app-server `skills/list` response returned all
-  seven with `enabled: true`, `scope: user`, paths under `~/.agents/skills`,
-  and an empty errors list.
-- Claude Code **2.1.266**: initialize-only SDK discovery returned all seven
-  as `(user)` commands, backed by valid `~/.claude/skills` symlinks.
-
-This verified discovery in each application, beyond availability in the
-orchestrating session. No model prompt, installation or configuration change
-was needed. The raw `handoff`, `implement-spec`, `implement`, `to-spec` and
-`to-tickets` skills set `disable-model-invocation: true`, so their availability
-supports explicit invocation rather than automatic model selection.
-The orchestrating session also exposes separate `matt-skills-curated:<name>`
-copies from plugin cache version 1.1.0; those namespaced copies do not substitute
-for the independently verified user-skill discovery in each CLI.

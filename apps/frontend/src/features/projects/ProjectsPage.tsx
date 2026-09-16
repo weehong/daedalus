@@ -24,26 +24,26 @@ export const ProjectsPage = (): React.ReactElement => {
 				heading={t("console.projects.heading")}
 				kicker={t("console.projects.kicker")}
 				actions={
-					<div className="flex min-w-0 flex-wrap items-center gap-3">
-						<Input
-							aria-label={t("projects.search")}
-							placeholder={t("projects.search")}
-							type="search"
-							value={search}
-							onChange={(event): void => {
-								setSearch(event.target.value);
-								setPagination({ q: event.target.value.trim(), page: 1 });
-							}}
-						/>
-						<Link
-							className="inline-flex min-h-10 items-center border border-accent bg-accent px-3 py-2 font-heading text-sm font-semibold text-canvas hover:bg-accent-600"
-							to="/projects/new"
-						>
-							{t("projects.create.heading")}
-						</Link>
-					</div>
+					<Link
+						className="inline-flex min-h-10 items-center border border-accent bg-accent px-3 py-2 font-heading text-sm font-semibold text-canvas hover:bg-accent-600"
+						to="/projects/new"
+					>
+						{t("projects.create.heading")}
+					</Link>
 				}
 			/>
+			<div className="mb-4 max-w-sm min-w-0">
+				<Input
+					aria-label={t("projects.search")}
+					placeholder={t("projects.search")}
+					type="search"
+					value={search}
+					onChange={(event): void => {
+						setSearch(event.target.value);
+						setPagination({ q: event.target.value.trim(), page: 1 });
+					}}
+				/>
+			</div>
 			{query.isPending ? (
 				<p role="status">{t("projects.loading")}</p>
 			) : query.isError ? (

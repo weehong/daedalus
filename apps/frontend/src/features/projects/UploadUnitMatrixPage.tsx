@@ -15,9 +15,18 @@ import type {
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ApiRequestError } from "@/common/api";
+import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { UnitMatrixAccordion } from "@/features/projects/UnitMatrixAccordion";
 import { useParseUnitMatrix } from "@/features/projects/useParseUnitMatrix";
+/** The file control wears the field's clothes, its browse button the secondary Button's. */
+const FILE_INPUT =
+	"block w-full min-w-0 border border-rule bg-surface p-2 text-sm text-ink transition hover:border-ink/45 file:mr-3 file:min-h-8 file:cursor-pointer file:border file:border-rule file:bg-transparent file:px-3 file:py-1.5 file:font-heading file:text-sm file:font-semibold file:text-ink hover:file:bg-ink/7 disabled:cursor-not-allowed disabled:opacity-45";
+/** The sheet picker, matching the Input component's surface and hairline. */
+const SELECT =
+	"min-h-9 w-full max-w-full min-w-0 border border-rule bg-surface px-2.5 py-1.5 text-sm text-ink transition hover:border-ink/45 disabled:cursor-not-allowed disabled:opacity-45";
+const FIELD_LABEL = "text-xs text-ink/70";
+
 export const UploadUnitMatrixPage = ({
 	id,
 }: {
@@ -95,10 +104,9 @@ export const UploadUnitMatrixPage = ({
 				)
 			: undefined);
 	return (
-		<section className="min-w-0 space-y-5">
-			<h2 className="text-2xl">{t("projects.upload.title")}</h2>
+		<section className="min-w-0 space-y-4">
 			<form
-				className="space-y-3"
+				className="min-w-0 max-w-xl border border-rule"
 				onSubmit={(event): void => {
 					event.preventDefault();
 					setError(undefined);
@@ -129,57 +137,72 @@ export const UploadUnitMatrixPage = ({
 					});
 				}}
 			>
-				<label className="block" htmlFor="unit-matrix-file">
-					{t("projects.upload.file")}
-				</label>
-				<input
-					accept=".xls,.xlsx"
-					aria-describedby="unit-matrix-hint"
-					className="block w-full min-w-0 text-sm"
-					disabled={parse.isPending || commit.isPending}
-					id="unit-matrix-file"
-					type="file"
-					onChange={(event): void => {
-						setFile(event.target.files?.[0]);
-						setError(undefined);
-					}}
-				/>
-				<p className="text-sm" id="unit-matrix-hint">
-					{t("projects.upload.hint")}
-				</p>
-				<Button
-					disabled={commit.isPending}
-					pending={parse.isPending}
-					type="submit"
-				>
-					{t("projects.upload.parse")}
-				</Button>
+				<header className="border-b border-rule p-4">
+					<h2 className="m-0 text-xl">{t("projects.upload.title")}</h2>
+				</header>
+				<div className="grid gap-4 p-4">
+					<div className="grid gap-[5px]">
+						<label className={FIELD_LABEL} htmlFor="unit-matrix-file">
+							{t("projects.upload.file")}
+						</label>
+						<input
+							accept=".xls,.xlsx"
+							aria-describedby="unit-matrix-hint"
+							className={FILE_INPUT}
+							disabled={parse.isPending || commit.isPending}
+							id="unit-matrix-file"
+							type="file"
+							onChange={(event): void => {
+								setFile(event.target.files?.[0]);
+								setError(undefined);
+							}}
+						/>
+						<p className="m-0 text-xs text-ink/70" id="unit-matrix-hint">
+							{t("projects.upload.hint")}
+						</p>
+					</div>
+					{errorMessage && <Alert>{errorMessage}</Alert>}
+					<div className="flex flex-wrap items-center gap-3">
+						<Button
+							disabled={commit.isPending}
+							pending={parse.isPending}
+							type="submit"
+						>
+							{t("projects.upload.parse")}
+						</Button>
+						{parse.isPending && (
+							<p className="m-0 text-sm text-ink/70" role="status">
+								{t("projects.upload.parsing")}
+							</p>
+						)}
+					</div>
+				</div>
 			</form>
-			{parse.isPending && <p role="status">{t("projects.upload.parsing")}</p>}
-			{errorMessage && <p role="alert">{errorMessage}</p>}
 			{preview && !parse.isPending && (
 				<>
-					<label className="block" htmlFor="unit-matrix-sheet">
-						{t("projects.upload.sheet")}
-					</label>
-					<select
-						className="max-w-full border border-rule p-2"
-						disabled={commit.isPending}
-						id="unit-matrix-sheet"
-						value={sheetIndex}
-						onChange={(event): void => {
-							setSheetIndex(Number(event.target.value));
-						}}
-					>
-						{preview.sheets.map((entry, index) => (
-							<option key={index} value={index}>
-								{t("projects.upload.sheetOption", {
-									name: entry.name,
-									count: entry.blocks.length,
-								})}
-							</option>
-						))}
-					</select>
+					<div className="grid max-w-xs gap-[5px]">
+						<label className={FIELD_LABEL} htmlFor="unit-matrix-sheet">
+							{t("projects.upload.sheet")}
+						</label>
+						<select
+							className={SELECT}
+							disabled={commit.isPending}
+							id="unit-matrix-sheet"
+							value={sheetIndex}
+							onChange={(event): void => {
+								setSheetIndex(Number(event.target.value));
+							}}
+						>
+							{preview.sheets.map((entry, index) => (
+								<option key={index} value={index}>
+									{t("projects.upload.sheetOption", {
+										name: entry.name,
+										count: entry.blocks.length,
+									})}
+								</option>
+							))}
+						</select>
+					</div>
 					{sheet?.blocks.length ? (
 						<>
 							<UnitMatrixAccordion
@@ -216,7 +239,7 @@ export const UploadUnitMatrixPage = ({
 							{hardErrors.length > 0 && (
 								<ul
 									aria-label={t("projects.upload.commitError")}
-									className="list-disc pl-5"
+									className="mt-0 mb-6 list-disc space-y-1 pl-5 text-sm text-danger"
 									role="alert"
 								>
 									{hardErrors.map((error, index) => (
@@ -241,20 +264,22 @@ export const UploadUnitMatrixPage = ({
 								</ul>
 							)}
 							{omitted.length > 0 && (
-								<p>
+								<p className="m-0 text-sm text-ink/70">
 									{t("projects.upload.editor.omitted", {
 										names: omitted.join(", "),
 									})}
 								</p>
 							)}
 							{blockCount > 0 && (
-								<p>{t("projects.upload.hasBlocks", { count: blockCount })}</p>
+								<p className="m-0 text-sm text-ink/70">
+									{t("projects.upload.hasBlocks", { count: blockCount })}
+								</p>
 							)}
 							{(structure.blocks.length > 50 || unitCount > 10000) && (
-								<p role="alert">{t("projects.upload.caps")}</p>
+								<Alert>{t("projects.upload.caps")}</Alert>
 							)}
 							{commit.error && (
-								<p role="alert">
+								<Alert>
 									{t(
 										commit.error instanceof ApiRequestError &&
 											commit.error.code === "PROJECT_HAS_BLOCKS"
@@ -262,7 +287,7 @@ export const UploadUnitMatrixPage = ({
 											: "projects.upload.commitError",
 										{ count: conflictCount }
 									)}
-								</p>
+								</Alert>
 							)}
 							<Button
 								disabled={invalid || blockCount > 0}
@@ -306,7 +331,9 @@ export const UploadUnitMatrixPage = ({
 							</Button>
 						</>
 					) : (
-						<p>{t("projects.upload.empty")}</p>
+						<p className="m-0 border border-rule p-7 text-sm text-ink/70">
+							{t("projects.upload.empty")}
+						</p>
 					)}
 				</>
 			)}

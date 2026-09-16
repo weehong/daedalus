@@ -160,20 +160,6 @@ remain linked above. Initial harness selector corrections and Firefox's
 forward Tab wrap into the development toolbar required no application change;
 normal backward keyboard navigation reached the controls.
 
-## Skill availability
-
-The handoff's required skill names were audited in Claude Code's installed
-skill paths and the live Codex catalog, independently of OpenCode. The shared
-`tdd`, `codebase-design`, `domain-modeling`, `code-review` and
-`resolving-merge-conflicts` files are installed through working symlinks under
-`/home/vernon/.claude/skills/<name>/SKILL.md` and discoverable in Codex under
-bare and curated names. Claude configuration and CLI resolution establish
-discovery eligibility; no nested Claude model invocation or picker test was
-performed. Claude `triage` and `implement-spec` are explicit-invocation only;
-Codex exposes their `matt-skills-curated:` aliases. `run` is missing in both;
-ordinary repository launch commands supplied that capability. No skills were
-installed or modified.
-
 ## Evidence provenance
 
 This durable summary records the coordinator's combined results and source
@@ -181,7 +167,7 @@ inspection. Session-local supporting artifacts are under
 `/tmp/daedalus-subcontractors-run/`: `coordinator-notes.md`,
 `ticket06-root-{lint,typecheck,test}.log`, ticket 01–08 implementation and
 integration reports, `standards-review-initial.md`, `standards-review-final.md`, `spec-review-final.md`,
-`unicode-backfill-remediation.md`, `skills-audit.md`, and
+`unicode-backfill-remediation.md`, and
 `final-{frontend-browser,backend-browser,build,storybook,keyboard-mobile}.log`.
 These temporary files
 may be removed; source and test links in this document remain the reproducible

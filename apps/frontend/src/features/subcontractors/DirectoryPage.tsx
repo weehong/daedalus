@@ -24,26 +24,26 @@ export const DirectoryPage = (): React.ReactElement => {
 				heading={t("console.subcontractors.heading")}
 				kicker={t("console.subcontractors.kicker")}
 				actions={
-					<div className="flex min-w-0 flex-wrap items-center gap-3">
-						<Input
-							aria-label={t("subcontractors.search")}
-							placeholder={t("subcontractors.search")}
-							type="search"
-							value={search}
-							onChange={(event): void => {
-								setSearch(event.target.value);
-								setPagination({ q: event.target.value.trim(), page: 1 });
-							}}
-						/>
-						<Link
-							className="inline-flex min-h-10 items-center border border-accent bg-accent px-3 py-2 font-heading text-sm font-semibold text-canvas hover:bg-accent-600"
-							to="/subcontractors/new"
-						>
-							{t("subcontractors.create.action")}
-						</Link>
-					</div>
+					<Link
+						className="inline-flex min-h-10 items-center border border-accent bg-accent px-3 py-2 font-heading text-sm font-semibold text-canvas hover:bg-accent-600"
+						to="/subcontractors/new"
+					>
+						{t("subcontractors.create.action")}
+					</Link>
 				}
 			/>
+			<div className="mb-4 max-w-sm min-w-0">
+				<Input
+					aria-label={t("subcontractors.search")}
+					placeholder={t("subcontractors.search")}
+					type="search"
+					value={search}
+					onChange={(event): void => {
+						setSearch(event.target.value);
+						setPagination({ q: event.target.value.trim(), page: 1 });
+					}}
+				/>
+			</div>
 			{query.isPending ? (
 				<p role="status">{t("subcontractors.loading")}</p>
 			) : query.isError ? (

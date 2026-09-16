@@ -73,7 +73,7 @@ export const ConsoleLayout = (): FunctionComponent => {
 								}
 							/>
 							{failed && (
-								<p className="m-0 text-xs text-accent-800" role="alert">
+								<p className="m-0 text-xs text-danger" role="alert">
 									{t("auth.errors.signOut")}
 								</p>
 							)}

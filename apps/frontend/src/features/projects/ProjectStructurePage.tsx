@@ -110,17 +110,21 @@ export const ProjectStructurePage = ({
 						<button
 							disabled
 							aria-describedby="upload-disabled-hint"
-							className="underline opacity-50"
+							className={`${PRINT_ACTION} cursor-not-allowed opacity-45`}
 							type="button"
 						>
 							{t("projects.upload.title")}
 						</button>
-						<span id="upload-disabled-hint">
+						<span className="text-sm text-ink/70" id="upload-disabled-hint">
 							{t("projects.upload.hasBlocks", { count: project.blocks.length })}
 						</span>
 					</>
 				) : (
-					<Link className="underline" params={{ id }} to="/projects/$id/upload">
+					<Link
+						className={PRINT_ACTION}
+						params={{ id }}
+						to="/projects/$id/upload"
+					>
 						{t("projects.upload.title")}
 					</Link>
 				)}
@@ -129,17 +133,6 @@ export const ProjectStructurePage = ({
 				<BlocksPane
 					blocks={project.blocks}
 					selectedId={block?.id}
-					extraActions={
-						project.blocks.length === 0 ? (
-							<Link
-								className="text-sm underline"
-								params={{ id }}
-								to="/projects/$id/upload"
-							>
-								{t("projects.upload.title")}
-							</Link>
-						) : undefined
-					}
 					pending={
 						mutations.add.isPending ||
 						mutations.rename.isPending ||

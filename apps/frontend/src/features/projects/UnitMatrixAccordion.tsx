@@ -6,6 +6,7 @@ import {
 } from "@/features/projects/matrix-to-structure";
 import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Input } from "@/components/ui/Input";
 import { UnitMatrixTable } from "@/features/projects/UnitMatrixTable";
 import type { UnitMatrixBlock } from "@/features/projects/unitMatrixTypes";
 export const UnitMatrixAccordion = ({
@@ -33,10 +34,11 @@ export const UnitMatrixAccordion = ({
 			{blocks.map((block, index) => (
 				<section key={index} className="min-w-0 border border-rule">
 					{selections?.[index] && onSelectionChange && (
-						<div className="space-y-2 border-b border-rule p-4">
-							<label className="flex items-center gap-2">
+						<div className="grid gap-3 border-b border-rule p-4">
+							<label className="flex items-center gap-2 text-sm">
 								<input
 									checked={selections[index].included}
+									className="accent-accent"
 									disabled={pending}
 									type="checkbox"
 									onChange={(event): void => {
@@ -48,34 +50,42 @@ export const UnitMatrixAccordion = ({
 								/>
 								{t("projects.upload.includeBlock", { index: index + 1 })}
 							</label>
-							<label className="block" htmlFor={`${prefix}-name-${index}`}>
-								{t("projects.upload.blockName", { index: index + 1 })}
-							</label>
-							<input
-								aria-invalid={Boolean(errors?.[index])}
-								className="w-full border border-rule p-2"
-								disabled={pending}
-								id={`${prefix}-name-${index}`}
-								value={selections[index].name}
-								aria-describedby={
-									errors?.[index] ? `${prefix}-error-${index}` : undefined
-								}
-								onChange={(event): void => {
-									onSelectionChange(index, {
-										...selections[index]!,
-										name: event.target.value,
-									});
-								}}
-							/>
-							{errors?.[index] && (
-								<p id={`${prefix}-error-${index}`} role="alert">
-									{t(
-										errors[index] === "duplicate"
-											? "projects.upload.duplicateBlock"
-											: "projects.upload.invalidBlock"
-									)}
-								</p>
-							)}
+							<div className="grid max-w-xs gap-[5px]">
+								<label
+									className="text-xs text-ink/70"
+									htmlFor={`${prefix}-name-${index}`}
+								>
+									{t("projects.upload.blockName", { index: index + 1 })}
+								</label>
+								<Input
+									aria-invalid={Boolean(errors?.[index])}
+									disabled={pending}
+									id={`${prefix}-name-${index}`}
+									value={selections[index].name}
+									aria-describedby={
+										errors?.[index] ? `${prefix}-error-${index}` : undefined
+									}
+									onChange={(event): void => {
+										onSelectionChange(index, {
+											...selections[index]!,
+											name: event.target.value,
+										});
+									}}
+								/>
+								{errors?.[index] && (
+									<p
+										className="m-0 text-xs text-danger"
+										id={`${prefix}-error-${index}`}
+										role="alert"
+									>
+										{t(
+											errors[index] === "duplicate"
+												? "projects.upload.duplicateBlock"
+												: "projects.upload.invalidBlock"
+										)}
+									</p>
+								)}
+							</div>
 						</div>
 					)}
 					<h3 className="m-0">

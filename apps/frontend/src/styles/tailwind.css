@@ -35,6 +35,11 @@
 	--color-accent-800: #2c455d;
 	--color-accent-900: #1d2d3d;
 
+	/* The one red in the system: every error message, invalid control and
+	 * erroring row wears it, and nothing else does. */
+	--color-danger: #b3261e;
+	--color-danger-100: #fbe9e7;
+
 	--color-neutral-100: #f5f5f8;
 	--color-neutral-200: #e7e7ea;
 	--color-neutral-300: #d4d4d7;

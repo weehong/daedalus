@@ -27,7 +27,7 @@ export const Field = ({
 				"aria-describedby": error ? errorId : undefined,
 			} as object)}
 			{error && (
-				<p className="m-0 text-xs text-accent-800" id={errorId}>
+				<p className="m-0 text-xs text-danger" id={errorId}>
 					{error}
 				</p>
 			)}

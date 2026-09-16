@@ -52,7 +52,7 @@ export function UnitMatrixEditor({
 		});
 	};
 	const actions =
-		"block rounded border border-rule px-2 py-1 text-xs font-normal disabled:opacity-50";
+		"block border border-rule px-2 py-1 text-xs font-normal transition hover:bg-ink/7 disabled:opacity-50";
 	return (
 		<div
 			aria-label={t("projects.upload.matrix", { name: value.name })}
@@ -140,12 +140,14 @@ export function UnitMatrixEditor({
 						const rowErrors = errors.filter(
 							(error) => error.row === row && error.column === undefined
 						);
+						// A Storey or any Unit on it failing marks the whole row.
+						const failing = errors.some((error) => error.row === row);
 						return (
-							<tr key={row}>
+							<tr key={row} className={failing ? "bg-danger-100" : undefined}>
 								<th className="border border-rule p-3 text-left" scope="row">
 									<input
 										aria-invalid={rowErrors.length > 0}
-										className="w-full min-w-24 border border-rule p-2 font-normal"
+										className={`w-full min-w-24 border p-2 font-normal ${rowErrors.length > 0 ? "border-danger" : "border-rule"}`}
 										disabled={pending}
 										value={storey.name}
 										aria-describedby={
@@ -165,9 +167,13 @@ export function UnitMatrixEditor({
 											});
 										}}
 									/>
-									<div id={`${prefix}-row-${row}`}>
+									<div className="space-y-1" id={`${prefix}-row-${row}`}>
 										{rowErrors.map((error, index) => (
-											<p key={index} role="alert">
+											<p
+												key={index}
+												className="m-0 text-xs font-normal text-danger"
+												role="alert"
+											>
 												{t(`projects.upload.editor.errors.${error.code}`)}
 											</p>
 										))}
@@ -227,7 +233,7 @@ export function UnitMatrixEditor({
 										>
 											<input
 												aria-invalid={cellErrors.length > 0}
-												className="w-full min-w-32 border border-rule p-2"
+												className={`w-full min-w-32 border p-2 ${cellErrors.length > 0 ? "border-danger" : "border-rule"}`}
 												disabled={pending}
 												value={storey.cells[column] ?? ""}
 												aria-describedby={
@@ -257,9 +263,16 @@ export function UnitMatrixEditor({
 													});
 												}}
 											/>
-											<div id={`${prefix}-cell-${row}-${column}`}>
+											<div
+												className="space-y-1"
+												id={`${prefix}-cell-${row}-${column}`}
+											>
 												{cellErrors.map((error, index) => (
-													<p key={index} role="alert">
+													<p
+														key={index}
+														className="m-0 text-xs text-danger"
+														role="alert"
+													>
 														{t(`projects.upload.editor.errors.${error.code}`)}
 													</p>
 												))}

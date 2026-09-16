@@ -11,7 +11,6 @@ import { nameKey } from "@/features/projects/name-generator";
 import type { Block } from "@/features/projects/types";
 export const BlocksPane = ({
 	blocks,
-	extraActions,
 	renderBlockAction,
 	selectedId,
 	pending = false,
@@ -22,7 +21,6 @@ export const BlocksPane = ({
 	onSelect,
 }: {
 	blocks: Array<Block>;
-	extraActions?: React.ReactNode;
 	/** An action of the screen's own beside each Block's Rename and Delete. */
 	renderBlockAction?: (block: Block) => ReactNode;
 	selectedId?: string;
@@ -83,7 +81,6 @@ export const BlocksPane = ({
 			selectedId={selectedId}
 			actions={
 				<div className="flex flex-wrap gap-2">
-					{extraActions}
 					<Button
 						ref={addButton}
 						disabled={pending}
@@ -167,7 +164,7 @@ export const BlocksPane = ({
 						</Button>
 					</form>
 				) : (
-					<div className="flex flex-wrap gap-2 px-3 pb-3">
+					<div className="flex flex-wrap gap-2 px-3 pt-3 pb-3">
 						{renderBlockAction?.(block)}
 						<Button
 							disabled={pending}

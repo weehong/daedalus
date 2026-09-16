@@ -38,7 +38,7 @@ export const CatalogueItemsTable = ({
 						const editor = renderEditor?.(catalogueItem);
 						return (
 							<Fragment key={catalogueItem.id}>
-								<tr>
+								<tr className="border-b border-rule last:border-0">
 									<td className="p-3 break-words">{catalogueItem.name}</td>
 									<td className="p-3">{catalogueItem.itemCount}</td>
 									{renderActions && (

@@ -21,8 +21,8 @@ test("uploads a workbook, switches sheets and opens a second Block", async ({
 	await page.goto("/projects/garden");
 	await expect(
 		page.getByRole("link", { name: "Upload Unit Matrix" })
-	).toHaveCount(2);
-	await page.getByRole("link", { name: "Upload Unit Matrix" }).first().click();
+	).toHaveCount(1);
+	await page.getByRole("link", { name: "Upload Unit Matrix" }).click();
 	await expect(
 		page.getByRole("link", { name: "Projects", exact: true })
 	).toHaveAttribute("aria-current", "page");

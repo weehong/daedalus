@@ -177,7 +177,7 @@ export const StoreysPane = ({
 						</Button>
 					</form>
 				) : (
-					<div className="flex gap-2 px-3 pb-3">
+					<div className="flex gap-2 px-3 pt-3 pb-3">
 						<Button
 							ref={(element): void => {
 								if (

@@ -17,12 +17,11 @@ never the snapshots.
 | Fourteen tickets, one file each, all `ready-for-agent` | `.scratch/projects/issues/` | `issues/` |
 | Glossary (use its exact vocabulary in code, tests, copy) | `CONTEXT.md` | `CONTEXT.md` |
 | ADRs 0001 to 0007; 0005, 0006 and 0007 govern this feature | `docs/adr/` | `adr/` |
-| How tickets are tracked and triaged, how the glossary is applied | `docs/agents/` | `agent-docs/` |
 | Monorepo and backend agent rules | `AGENTS.md`, `apps/backend/AGENTS.md` | `agent-docs/ROOT-AGENTS.md`, `agent-docs/BACKEND-AGENTS.md` |
 | Ticket dependency graph and parallel waves | this directory only | `dependency-graph.md` |
 | Layout facts about the real developer workbooks | this directory only | `workbook-layout-findings.md` |
 
-The interview (grilling) and the ticket approval (to-tickets) steps are
+The interview and ticket approval steps are
 complete. Every design question the user was asked is answered and recorded
 in the spec; nothing in the tickets is provisional.
 
@@ -46,7 +45,7 @@ in the spec; nothing in the tickets is provisional.
 
 ## Ground rules for the implementing agents
 
-- Read `CONTEXT.md` and `docs/agents/domain.md` first. Titles, test names
+- Read `CONTEXT.md` first. Titles, test names
   and UI copy use the glossary's terms and avoid its listed synonyms.
 - Read `apps/backend/AGENTS.md` before backend work. There is no frontend
   AGENTS.md; the frontend conventions are in `apps/frontend/SCAFFOLD.md`
@@ -107,23 +106,6 @@ See `dependency-graph.md` for the full graph. In short:
    prefactoring. If the agent running it runs out of context, split at the
    seam between "models, seed, helper" and "list route and screen", keeping
    01's number for the first half.
-
-## Suggested skills to load
-
-Load with the Skill tool at the start of each implementing session.
-
-- `domain-modeling`: to read `CONTEXT.md` and the ADRs before naming
-  anything, and to raise a glossary gap instead of inventing a term.
-- `tdd`: every ticket lists its HTTP-seam, unit and e2e coverage; write the
-  failing test first, in the style of the existing Subcontractor tests.
-- `code-review`: before marking a ticket done, review the branch against
-  the spec and the app's coding standards.
-- `simplify`: after a ticket's tests pass, one pass for reuse and altitude
-  before review.
-- `diagnosing-bugs`: when an integration test or the parser misbehaves,
-  rather than patching symptoms.
-- `run`: to see a screen working in the real app once the dev server can
-  reach a database.
 
 ## Facts an agent would otherwise have to rediscover
 
