@@ -1,0 +1,16 @@
+// Vitest runs in a Node environment (no jsdom). Pin the runtime to "test" so the
+// app and config layers pick safe, deterministic defaults during unit and
+// integration runs.
+process.env["NODE_ENV"] = "test";
+process.env["LOG_LEVEL"] ??= "silent";
+// Default to a dedicated test database so unit/integration runs never touch the
+// development data. Override via DATABASE_URL when pointing at a real instance.
+process.env["DATABASE_URL"] ??=
+	"postgresql://postgres:postgres@localhost:5432/express_api_test?schema=public";
+// Supabase is only contacted through a stubbed `fetch` in tests; the URL just
+// has to be well-formed so the env schema accepts it.
+process.env["SUPABASE_URL"] ??= "https://example.supabase.co";
+// Member tokens are signed and verified in-process; any 32+ character string
+// lets the sign/verify pair round-trip in tests.
+process.env["MEMBER_TOKEN_SECRET"] ??=
+	"test-member-token-secret-with-at-least-32-characters";

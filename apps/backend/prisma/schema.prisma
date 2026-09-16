@@ -1,0 +1,194 @@
+// Prisma schema. Docs: https://pris.ly/d/prisma-schema
+// After editing, run `pnpm db:generate` (client) and `pnpm db:migrate`.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Seed domain for the reference vertical slice. Mirrors the shape the frontend
+/// example feature renders (table + chart + form). Replace with your own
+/// entities; see `apps/frontend/src/features/example/ExamplePage.tsx` for the
+/// list of files to delete alongside it.
+model Match {
+  id        String   @id @default(cuid())
+  homeTeam  String
+  awayTeam  String
+  homeScore Int      @default(0)
+  awayScore Int      @default(0)
+  playedOn  DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("matches")
+}
+
+model Subcontractor {
+  id        String   @id @default(cuid())
+  name      String
+  nameKey   String   @unique
+  members   Member[]
+  items     Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subcontractors")
+}
+
+model Member {
+  id              String        @id @default(cuid())
+  subcontractorId String
+  subcontractor   Subcontractor @relation(fields: [subcontractorId], references: [id], onDelete: Cascade)
+  name            String
+  phone           String        @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([subcontractorId])
+  @@map("members")
+}
+
+model Project {
+  id             String          @id @default(cuid())
+  name           String
+  nameKey        String          @unique
+  code           String          @unique
+  blocks         Block[]
+  unitTypes      UnitType[]
+  catalogueItems CatalogueItem[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@map("projects")
+}
+
+model Block {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  nameKey   String
+  position  Int
+  storeys   Storey[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, nameKey])
+  @@index([projectId, position, id])
+  @@map("blocks")
+}
+
+model Storey {
+  id        String   @id @default(cuid())
+  blockId   String
+  block     Block    @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  name      String
+  nameKey   String
+  position  Int
+  units     Unit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([blockId, nameKey])
+  @@index([blockId, position, id])
+  @@map("storeys")
+}
+
+model Unit {
+  id         String    @id @default(cuid())
+  storeyId   String
+  storey     Storey    @relation(fields: [storeyId], references: [id], onDelete: Cascade)
+  unitTypeId String?
+  unitType   UnitType? @relation(fields: [unitTypeId], references: [id], onDelete: Restrict)
+  name       String
+  nameKey    String
+  position   Int
+  items      Item[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([storeyId, nameKey])
+  @@index([storeyId, position, id])
+  @@index([unitTypeId])
+  @@map("units")
+}
+
+model UnitType {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  code        String
+  codeKey     String
+  description String?
+  units       Unit[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([projectId, codeKey])
+  @@map("unit_types")
+}
+
+/// Who made a Progress entry: an Administrator (Supabase subject) or a Member.
+enum ProgressAuthorKind {
+  administrator
+  member
+}
+
+/// One entry in a Project's Item Catalogue (ADR-0008): a name and nothing else.
+model CatalogueItem {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  nameKey   String
+  items     Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, nameKey])
+  @@map("catalogue_items")
+}
+
+/// A per-Unit copy made from a Catalogue Item, carrying its own Assignment
+/// (the Subcontractor reference and `assignedAt`) and stored Progression.
+model Item {
+  id              String          @id @default(cuid())
+  unitId          String
+  unit            Unit            @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  catalogueItemId String
+  catalogueItem   CatalogueItem   @relation(fields: [catalogueItemId], references: [id], onDelete: Restrict)
+  subcontractorId String?
+  subcontractor   Subcontractor?  @relation(fields: [subcontractorId], references: [id], onDelete: Restrict)
+  assignedAt      DateTime?
+  progression     Int             @default(0)
+  entries         ProgressEntry[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([unitId, catalogueItemId])
+  @@index([catalogueItemId])
+  @@index([subcontractorId])
+  @@index([unitId])
+  @@map("items")
+}
+
+/// Append-only history of an Item's Progression; the latest entry is the Progression.
+model ProgressEntry {
+  id                String             @id @default(cuid())
+  itemId            String
+  item              Item               @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  value             Int
+  note              String?
+  enteredByKind     ProgressAuthorKind
+  enteredById       String
+  enteredByName     String
+  subcontractorName String?
+  createdAt         DateTime           @default(now())
+
+  @@index([itemId, createdAt, id])
+  @@map("progress_entries")
+}
