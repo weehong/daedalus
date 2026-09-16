@@ -97,8 +97,33 @@ browser ──▶ :5173/api/v1/matches
               └── vite proxy ──▶ :3000/api/v1/matches
 ```
 
-`VITE_API_URL` is empty in development because of this. Set it to the real API
-origin for production builds, where the two are served separately.
+`VITE_API_URL` is empty in development because of this. It also stays empty on
+Vercel, where the frontend and API share an origin. Set it to the API origin
+only when hosting the two separately.
+
+## Vercel deployment
+
+The `daedalus-2` project in the Vernon team serves the Vite build and the
+Express API together. `vercel.json` routes API requests to `api/index.js` and
+frontend deep links to the SPA. The function imports the compiled app factory;
+it does not start a separate listening server. Builds generate Prisma Client
+before compiling both apps.
+
+- `main` is the production branch: <https://daedalus-2.vercel.app>.
+- `dev` uses Vercel's Preview environment.
+- Production and Preview deliberately share the existing Supabase project and
+  `daedalus2` database schema, so changes in either environment affect the same
+  data.
+- Vercel environment settings hold `DATABASE_URL`, `SUPABASE_URL`,
+  `MEMBER_TOKEN_SECRET`, `VITE_SUPABASE_URL`, and `VITE_SUPABASE_ANON_KEY`.
+  `VITE_API_URL` is empty, `TRUST_PROXY=true`, and `NODE_ENV=production` for
+  deployed environments. Local env files are excluded from CLI uploads.
+- Database migrations are applied explicitly with the backend's `db:deploy`
+  command, rather than during each preview build.
+
+Vercel Functions impose a 4.5 MB request-body limit. On this deployment,
+Unit Matrix uploads must fit that limit (including multipart overhead), even
+though the application's own upload limit is 10 MB.
 
 | Endpoint            | Purpose                                          |
 | ------------------- | ------------------------------------------------ |

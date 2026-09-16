@@ -1,0 +1,11 @@
+.env
+.env.*
+**/.env
+**/.env.*
+.scratch
+codex-handoff
+docs
+**/dist
+**/coverage
+**/playwright-report
+**/test-results
